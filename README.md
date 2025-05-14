@@ -1,5 +1,5 @@
 Ransomware-Simulation
-This project demonstrates a basic ransomware simulation written in Python using the cryptography package. The simulation includes both an encryption script (rans.py) and a decryption script (decrypt.py).
+This project demonstrates a basic ransomware simulation written in Python using the cryptography package. The simulation includes both an encryption script (encryption.py) and a decryption script (decryption.py).
 
 Prerequisites Python 3.x installed on your system.
 
