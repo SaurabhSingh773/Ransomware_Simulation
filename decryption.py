@@ -5,7 +5,7 @@ from cryptography.fernet import Fernet, InvalidToken
 # Let's find some files
 files = []
 for file in os.listdir():
-    if file == "rans.py" or file == "mykey.key" or file == "decrypt.py":
+    if file == "encryption.py" or file == "mykey.key" or file == "decryption.py":
         continue
     if os.path.isfile(file):
         files.append(file)
