@@ -1,34 +1,35 @@
+#!/usr/bin/env python3
 import os
-import base64
+from cryptography.fernet import Fernet, InvalidToken
 
-# Function to decrypt a base64 encoded file
-def decrypt_file(file_path):
-    with open(file_path, 'rb') as file:
-        file_data = file.read()
+# Let's find some files
+files = []
+for file in os.listdir():
+    if file == "rans.py" or file == "mykey.key" or file == "decrypt.py":
+        continue
+    if os.path.isfile(file):
+        files.append(file)
 
-    # Fix base64 padding if it's incorrect
-    missing_padding = len(file_data) % 4
-    if missing_padding:
-        file_data += b'=' * (4 - missing_padding)
+print(files)
 
+# Read the key from the file
+with open("mykey.key", "rb") as mykey:
+    key = mykey.read()
+
+for file in files:
     try:
-        decrypted_data = base64.b64decode(file_data)
+        with open(file, "rb") as thefile:
+            contents_encrypted = thefile.read()
+
+        # Decrypt the contents using the key
+        contents_decrypted = Fernet(key).decrypt(contents_encrypted)
+
+        # Write the decrypted contents back to the file
+        with open(file, "wb") as thefile:
+            thefile.write(contents_decrypted)
+
+    except InvalidToken:
+        print(f"Error decrypting {file}: InvalidToken. Make sure the key matches the one used for encryption.")
     except Exception as e:
-        print(f"Error during decryption: {e}")
-        return
-
-    with open(file_path, 'wb') as file:
-        file.write(decrypted_data)
-
-    print(f"Decrypted: {file_path}")
-
-# Directory containing the files to decrypt
-directory = "/home/immortal/ransomware_test"
-
-# Decrypt the files
-for filename in os.listdir(directory):
-    file_path = os.path.join(directory, filename)
-
-    # Skip decryption of encryption.py and decryption.py
-    if os.path.isfile(file_path) and filename not in ['encryption.py', 'decryption.py']:
-        decrypt_file(file_path)
+        print(f"Error decrypting {file}: {e}")
+ 
